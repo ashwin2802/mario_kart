@@ -12,7 +12,7 @@
     <arg name="enable_ground_truth" default="true" />
     <arg name="log_file" default="$(arg mav_name)" />
 
-    <arg name="start_x" default="-5.0"/>
+    <arg name="start_x" default="0.25"/>
     <arg name="start_y" default="0.0"/>
     <arg name="start_z" default="2.0"/>
 

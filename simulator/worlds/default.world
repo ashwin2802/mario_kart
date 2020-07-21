@@ -1,6 +1,6 @@
 <sdf version='1.6'>
   <world name='default'>
-    <plugin name='ros_interface_plugin' filename='librotors_gazebo_ros_interface_plugin.so'/>
+    <!-- <plugin name='ros_interface_plugin' filename='librotors_gazebo_ros_interface_plugin.so' /> -->
     <model name='ground_plane'>
       <static>1</static>
       <link name='link'>
@@ -70,7 +70,7 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <light name='sun' type='directional'>
-      <pose frame=''>0 0 10 0 -0 0</pose>
+      <pose frame=''>0 0 10 -0.3659 0.532611 2.936846</pose>
       <diffuse>0.8 0.8 0.8 1</diffuse>
       <specular>0.2 0.2 0.2 1</specular>
       <direction>0.4864 0.3039 -0.819</direction>
@@ -87,47 +87,93 @@
         <falloff>0</falloff>
       </spot>
     </light>
-    <model name='ground'>
-      <static>1</static>
-      <link name='link'>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>model://ground/meshes/ground.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-          <surface>
-            <contact>
-              <collide_bitmask>65535</collide_bitmask>
-              <ode/>
-            </contact>
-            <friction>
-              <ode>
-                <mu>100</mu>
-                <mu2>50</mu2>
-              </ode>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-            <bounce/>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://ground/meshes/ground.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose frame=''>0.435722 -0.96961 0 0 -0 0</pose>
-    </model>
+
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_1</name>
+      <pose>1.383424 -0.9237 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_2</name>
+      <pose>2.633424 2.0830 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_3</name>
+      <pose>3.883424 1.7060 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_4</name>
+      <pose>5.133424 0.6510 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_5</name>
+      <pose>6.383424 -0.1682 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_6</name>
+      <pose>7.633424 1.5186 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_7</name>
+      <pose>8.883424 1.1885 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_8</name>
+      <pose>10.133424 1.1515 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_9</name>
+      <pose>11.383424 -0.3045 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_10</name>
+      <pose>12.633424 0.4409 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_11</name>
+      <pose>13.883424 -0.4824 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_12</name>
+      <pose>15.133424 -0.2929 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_13</name>
+      <pose>16.383424 2.1794 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_14</name>
+      <pose>17.633424 0.1100 0.239064 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://gate</uri>
+      <name>gate_15</name>
+      <pose>18.883424 1.1337 0.239064 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://sidewall</uri>
+      <name>wall_1</name>
+      <pose>10 2.65 2.5 1.5707963 0 0</pose>
+    </include>
+    <include>
+      <uri>model://sidewall</uri>
+      <name>wall_2</name>
+      <pose>10 -2.65 2.5 1.5707963 0 0</pose>
+    </include>
   </world>
 </sdf>
+1
