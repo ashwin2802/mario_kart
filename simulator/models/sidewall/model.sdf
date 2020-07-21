@@ -1,18 +1,17 @@
 <?xml version="1.0" ?>
 <sdf version="1.5">
   <model name="sidewall">
-      <static>true</static>
-      <link name='link'>
-       <collision name="collision">
+    <static>true</static>
+    <link name='link'>
+      <collision name="collision">
         <geometry>
-            <mesh>
-              <uri>model://sidewall/meshes/sidewall.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
+          <box>
+            <size>20 5 0.3</size>
+          </box>
         </geometry>
         <surface>
           <contact>
-             <collide_bitmask>0xffff</collide_bitmask>
+            <collide_bitmask>0xffff</collide_bitmask>
           </contact>
           <friction>
             <ode>
@@ -22,14 +21,20 @@
           </friction>
         </surface>
       </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://sidewall/meshes/sidewall.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-        </visual>
-      </link>
+      <visual name='visual'>
+        <geometry>
+          <box>
+            <size>20 5 0.3</size>
+          </box>
+        </geometry>
+        <material>
+          <lighting>1</lighting>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Grey</name>
+          </script>
+        </material>
+      </visual>
+    </link>
   </model>
 </sdf>

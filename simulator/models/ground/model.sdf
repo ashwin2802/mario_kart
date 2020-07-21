@@ -1,18 +1,17 @@
 <?xml version="1.0" ?>
-<sdf version="1.5">
+<sdf version="1.6">
   <model name="ground">
-      <static>true</static>
-      <link name='link'>
-       <collision name="collision">
+    <static>true</static>
+    <link name='link'>
+      <collision name="collision">
         <geometry>
-            <mesh>
-              <uri>model://ground/meshes/ground.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
+          <box>
+            <size>20 5 0.01</size>
+          </box>
         </geometry>
         <surface>
           <contact>
-             <collide_bitmask>0xffff</collide_bitmask>
+            <collide_bitmask>0xffff</collide_bitmask>
           </contact>
           <friction>
             <ode>
@@ -22,14 +21,19 @@
           </friction>
         </surface>
       </collision>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>model://ground/meshes/ground.dae</uri>
-              <scale>1 1 1</scale>
-            </mesh>
-          </geometry>
-        </visual>
-      </link>
+      <visual name='visual'>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Orange</name>
+          </script>
+        </material>
+        <geometry>
+          <box>
+            <size>20 5 0.01</size>
+          </box>
+        </geometry>
+      </visual>
+    </link>
   </model>
 </sdf>
