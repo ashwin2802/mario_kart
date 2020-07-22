@@ -14,7 +14,7 @@
 
     <arg name="start_x" default="0.25"/>
     <arg name="start_y" default="0.0"/>
-    <arg name="start_z" default="2.0"/>
+    <arg name="start_z" default="3.25"/>
 
     <env name="GAZEBO_MODEL_PATH" value="${GAZEBO_MODEL_PATH}:$(find rotors_gazebo)/models:$(find simulator)/models"/>
     <env name="GAZEBO_RESOURCE_PATH" value="${GAZEBO_RESOURCE_PATH}:$(find rotors_gazebo)/models:$(find simulator)/models"/>
