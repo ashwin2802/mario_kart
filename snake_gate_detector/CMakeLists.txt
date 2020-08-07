@@ -7,5 +7,7 @@ catkin_simple(ALL_DEPS_REQUIRED)
 add_definitions(-std=c++17)
 set(CMAKE_BUILD_TYPE Release)
 
+cs_add_library(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
+
 cs_install()
 cs_export()
