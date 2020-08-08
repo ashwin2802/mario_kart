@@ -32,12 +32,12 @@ class SnakeGateDetector {
     double norm(cv::Point& P1, cv::Point& P2);
     double colorFitness(cv::Point* detected_gate);
 
-    cv::Point* searchUpDown(cv::Point& P);
-    cv::Point searchLeft(cv::Point& P);
-    cv::Point searchRight(cv::Point& P);
+    void searchUpDown(cv::Point& P0, cv::Point* P);
+    void searchLeft(cv::Point& P0, cv::Point* P);
+    void searchRight(cv::Point& P0, cv::Point* P);
 
-    cv::Point* findMinimalSquare(cv::Point& P1, cv::Point& P2, cv::Point& P3, cv::Point& P4);
-    cv::Point* refineCorner(cv::Point& S1, cv::Point& S2, cv::Point& S3, cv::Point& S4);    
+    void findMinimalSquare(const cv::Point* P_in, cv::Point* P_out);
+    void refineCorner(const cv::Point* P_in, cv::Point* P_out);
 
 };
 }  // namespace snake_gate_detector
