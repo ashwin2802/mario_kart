@@ -20,13 +20,21 @@ void SnakeGateDetector::setMaxGates(int max_gates) {
 }
 
 void SnakeGateDetector::setImageFrame(cv::Mat frame) {
+    static bool if_first_frame = true;
+    if (if_first_frame) {
+        if_first_frame = false;
+        for (int i = 0; i < (frame_.size().height) * (frame_.size().height); i++) {
+            random_sample_.push_back(i);
+        }
+    }
     frame_ = frame;
+    randomize();
 }
 
 void SnakeGateDetector::findGates() {
     int num_gates = 0;
     for (int i = 0; i < (frame_.size().height) * (frame_.size().height); i++) {
-        cv::Point P0 = randomPoint(frame_.size().width, frame_.size().height);
+        cv::Point P0 = cv::Point(i % frame_.size().width, i / frame_.size().width);
 
         if (isTargetColor(P0)) {
             cv::Point P[4];
@@ -46,8 +54,7 @@ void SnakeGateDetector::findGates() {
                     detected_gate[2] = P[2];
                     detected_gate[3] = P[3];
 
-
-                    if (/*colorFitness(detected_gate) > color_fitness_threshold_*/1) {
+                    if (/*colorFitness(detected_gate) > color_fitness_threshold_*/ 1) {
                         detected_gates_.push_back(detected_gate);
                         num_gates++;
                         if (num_gates == max_gates_) {
@@ -72,7 +79,7 @@ void SnakeGateDetector::findGates() {
                     detected_gate[2] = P[2];
                     detected_gate[3] = P[3];
 
-                    if (/*colorFitness(detected_gate) > color_fitness_threshold_*/1) {
+                    if (/*colorFitness(detected_gate) > color_fitness_threshold_*/ 1) {
                         detected_gates_.push_back(detected_gate);
                         num_gates++;
                         if (num_gates == max_gates_) {
@@ -88,9 +95,9 @@ void SnakeGateDetector::findGates() {
     }
 }
 
-cv::Point SnakeGateDetector::randomPoint(int width, int height) {
-    srand(time(0));
-    return cv::Point(rand() % width, rand() % height);
+void SnakeGateDetector::randomize() {
+    srand(unsigned(time(0)));
+    std::random_shuffle(random_sample_.begin(), random_sample_.end());
 }
 
 bool SnakeGateDetector::isTargetColor(const cv::Point& P) {
@@ -200,7 +207,6 @@ void SnakeGateDetector::findMinimalSquare(const cv::Point* P_in, cv::Point* P_ou
 }
 
 void refineCorner(const cv::Point* P_in, cv::Point* P_out) {
-    
 }
 
 }  // namespace snake_gate_detector
