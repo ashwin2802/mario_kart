@@ -14,6 +14,7 @@ class SnakeGateDetector {
     void setMaxGates(int max_gates);
     std::vector<cv::Point*>* getDetectedGates(); 
     cv::Mat getFrameWithGates();
+    bool isTestImage;
   
   private:
     int length_threshold_;
@@ -23,6 +24,8 @@ class SnakeGateDetector {
     std::vector<int> random_sample_;
 
     cv::Mat frame_;
+    cv::Mat gate_progress_image_;
+    cv::Mat gate_progress_image_copy_;
     cv::Vec3b hsv_threshold_upper_;
     cv::Vec3b hsv_threshold_lower_;
     
