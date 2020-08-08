@@ -37,12 +37,17 @@ void SnakeGateDetector::findGates() {
                 searchLeft(P[1], P + 3);
 
                 if (norm(P[0], P[2]) > length_threshold_ || norm(P[1], P[3]) > length_threshold_) {
-                    cv::Point S[4];
+                    // cv::Point S[4];
                     cv::Point* detected_gate = new cv::Point[4];
-                    findMinimalSquare(P, S);
-                    refineCorner(S, detected_gate);
+                    // findMinimalSquare(P, S);
+                    // refineCorner(S, detected_gate);
+                    detected_gate[0] = P[0];
+                    detected_gate[1] = P[1];
+                    detected_gate[2] = P[2];
+                    detected_gate[3] = P[3];
 
-                    if (colorFitness(detected_gate) > color_fitness_threshold_) {
+
+                    if (/*colorFitness(detected_gate) > color_fitness_threshold_*/1) {
                         detected_gates_.push_back(detected_gate);
                         num_gates++;
                         if (num_gates == max_gates_) {
@@ -54,16 +59,20 @@ void SnakeGateDetector::findGates() {
                     }
                 }
 
-                searchRight(P[0], P+2);
-                searchRight(P[1], P+3);
+                searchRight(P[0], P + 2);
+                searchRight(P[1], P + 3);
 
                 if (norm(P[0], P[2]) > length_threshold_ || norm(P[1], P[3]) > length_threshold_) {
-                    cv::Point S[4];
+                    // cv::Point S[4];
                     cv::Point* detected_gate = new cv::Point[4];
-                    findMinimalSquare(P, S);
-                    refineCorner(S, detected_gate);
+                    // findMinimalSquare(P, S);
+                    // refineCorner(S, detected_gate);
+                    detected_gate[0] = P[0];
+                    detected_gate[1] = P[1];
+                    detected_gate[2] = P[2];
+                    detected_gate[3] = P[3];
 
-                    if (colorFitness(detected_gate) > color_fitness_threshold_) {
+                    if (/*colorFitness(detected_gate) > color_fitness_threshold_*/1) {
                         detected_gates_.push_back(detected_gate);
                         num_gates++;
                         if (num_gates == max_gates_) {
@@ -105,7 +114,7 @@ void SnakeGateDetector::searchUpDown(cv::Point& P0, cv::Point* P) {
 
     while (1) {
         if (isTargetColor(cv::Point(P[0].x, P[0].y - 1))) {
-        P[0].y--;
+            P[0].y--;
         } else if (isTargetColor(cv::Point(P[0].x - 1, P[0].y - 1))) {
             P[0].x--;
             P[0].y--;
@@ -130,7 +139,6 @@ void SnakeGateDetector::searchUpDown(cv::Point& P0, cv::Point* P) {
             break;
         }
     }
-
 }
 
 void SnakeGateDetector::searchLeft(cv::Point& P0, cv::Point* P) {
@@ -149,7 +157,6 @@ void SnakeGateDetector::searchLeft(cv::Point& P0, cv::Point* P) {
             break;
         }
     }
-
 }
 
 void SnakeGateDetector::searchRight(cv::Point& P0, cv::Point* P) {
