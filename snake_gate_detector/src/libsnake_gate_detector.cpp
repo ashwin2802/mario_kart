@@ -38,6 +38,14 @@ void SnakeGateDetector::setImageFrame(cv::Mat frame) {
     findGates();
 }
 
+std::vector<cv::Point*>* SnakeGateDetector::getDetectedGates() {
+    return &detected_gates_;
+}
+
+cv::Mat SnakeGateDetector::getFrameWithGates(){
+    return frame_;
+}
+
 void SnakeGateDetector::findGates() {
     int num_gates = 0;
     for (int i = 0; i < (frame_.size().height) * (frame_.size().height); i++) {

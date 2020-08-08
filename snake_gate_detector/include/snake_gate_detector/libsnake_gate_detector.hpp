@@ -13,6 +13,7 @@ class SnakeGateDetector {
     void setHSVThreshold(cv::Vec3b& upper, cv::Vec3b& lower);
     void setMaxGates(int max_gates);
     std::vector<cv::Point*>* getDetectedGates(); 
+    cv::Mat getFrameWithGates();
   
   private:
     int length_threshold_;
