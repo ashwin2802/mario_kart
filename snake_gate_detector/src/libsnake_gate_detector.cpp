@@ -168,9 +168,32 @@ void SnakeGateDetector::searchRight(cv::Point& P0, cv::Point* P) {
             break;
         }
     }
-
 }
 
-// void SnakeGateDetector::findMinimalSquare(const cv::Point* P_in, cv::Point* P_out);
+void SnakeGateDetector::findMinimalSquare(const cv::Point* P_in, cv::Point* P_out) {
+    int x_array[4] = {P_in[0].x, P_in[1].x, P_in[2].x, P_in[3].x};
+    int y_array[4] = {P_in[0].y, P_in[1].y, P_in[2].y, P_in[3].y};
+
+    int min_x = *std::min_element(x_array, x_array + 3);
+    int max_x = *std::max_element(x_array, x_array + 3);
+    int min_y = *std::min_element(y_array, y_array + 3);
+    int max_y = *std::max_element(y_array, y_array + 3);
+
+    P_out[0].x = min_x;
+    P_out[0].y = min_y;
+
+    P_out[1].x = min_x;
+    P_out[1].y = max_y;
+
+    P_out[2].x = max_x;
+    P_out[2].y = min_y;
+
+    P_out[3].x = max_x;
+    P_out[3].y = max_y;
+}
+
+void refineCorner(const cv::Point* P_in, cv::Point* P_out) {
+    
+}
 
 }  // namespace snake_gate_detector
