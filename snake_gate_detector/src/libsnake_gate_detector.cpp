@@ -42,13 +42,16 @@ void SnakeGateDetector::findGates() {
                     findMinimalSquare(P, S);
                     refineCorner(S, detected_gate);
 
-                    if (colorFitness(detected_gate) > color_fitness_threshold_)
+                    if (colorFitness(detected_gate) > color_fitness_threshold_) {
                         detected_gates_.push_back(detected_gate);
-
-                    num_gates++;
-                    if (num_gates == max_gates_)
-                        break;
-                    continue;
+                        num_gates++;
+                        if (num_gates == max_gates_) {
+                            break;
+                        }
+                        continue;
+                    } else {
+                        delete[] detected_gate;
+                    }
                 }
 
                 searchRight(P[0], P+2);
@@ -60,12 +63,16 @@ void SnakeGateDetector::findGates() {
                     findMinimalSquare(P, S);
                     refineCorner(S, detected_gate);
 
-                    if (colorFitness(detected_gate) > color_fitness_threshold_)
+                    if (colorFitness(detected_gate) > color_fitness_threshold_) {
                         detected_gates_.push_back(detected_gate);
-
-                    num_gates++;
-                    if (num_gates == max_gates_)
-                        break;
+                        num_gates++;
+                        if (num_gates == max_gates_) {
+                            break;
+                        }
+                        continue;
+                    } else {
+                        delete[] detected_gate;
+                    }
                 }
             }
         }
@@ -164,6 +171,6 @@ void SnakeGateDetector::searchRight(cv::Point& P0, cv::Point* P) {
 
 }
 
-
+// void SnakeGateDetector::findMinimalSquare(const cv::Point* P_in, cv::Point* P_out);
 
 }  // namespace snake_gate_detector
