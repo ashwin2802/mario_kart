@@ -27,8 +27,15 @@ void SnakeGateDetector::setImageFrame(cv::Mat frame) {
             random_sample_.push_back(i);
         }
     }
+
+    for (int i = detected_gates_.size() - 1; i >= 0; i--) {
+        delete [] detected_gates_.at(i);
+        detected_gates_.pop_back();
+    }
+
     frame_ = frame;
     randomize();
+    findGates();
 }
 
 void SnakeGateDetector::findGates() {
@@ -81,6 +88,10 @@ void SnakeGateDetector::findGates() {
 
                     if (/*colorFitness(detected_gate) > color_fitness_threshold_*/ 1) {
                         detected_gates_.push_back(detected_gate);
+                        cv::line(frame_, detected_gate[0], detected_gate[1], cv::Scalar(0, 0, 0), 3);
+                        cv::line(frame_, detected_gate[1], detected_gate[2], cv::Scalar(0, 0, 0), 3);
+                        cv::line(frame_, detected_gate[2], detected_gate[3], cv::Scalar(0, 0, 0), 3);
+                        cv::line(frame_, detected_gate[0], detected_gate[3], cv::Scalar(0, 0, 0), 3);
                         num_gates++;
                         if (num_gates == max_gates_) {
                             break;
