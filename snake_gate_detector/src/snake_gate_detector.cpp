@@ -33,7 +33,6 @@ void SnakeGateDetectorNode::init(ros::NodeHandle& nh) {
     detect_.setHSVThreshold(lower, upper);
     detect_.setMaxGates(max_gates);
     detect_.setLengthThreshold(length_threshold);
-
     // centre_pub_ = nh_private.advertise<detector_msgs::Centre>("centre_coord", 10);
     // thresh_pub_ = nh_private.advertise<sensor_msgs::Image>("thresh_img", 10);
     // contour_pub_ = nh_private.advertise<sensor_msgs::Image>("contours", 10);
@@ -41,7 +40,7 @@ void SnakeGateDetectorNode::init(ros::NodeHandle& nh) {
 
 void SnakeGateDetectorNode::run() {
     if (img_.empty()) { return; };
-
+    detect_.setImageFrame(img_);
     // detect_.thresholdImage(img_);
     // detect_.findGoodContours();
     // detect_.drawContours(img_);

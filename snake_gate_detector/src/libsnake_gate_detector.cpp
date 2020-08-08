@@ -16,20 +16,20 @@ void SnakeGateDetector::setHSVThreshold(cv::Vec3b& upper, cv::Vec3b& lower) {
 }
 
 void SnakeGateDetector::setMaxGates(int max_gates) {
-  max_gates = max_gates_;
+  max_gates_ = max_gates;
 }
 
-// void SnakeGateDetector::setImageFrame(cv::Mat frame) const {
-//   frame_ = frame;
-// }
+void SnakeGateDetector::setImageFrame(cv::Mat frame) {
+  frame_ = frame;
+}
 
 cv::Point SnakeGateDetector::randomPoint(int width, int height) {
     srand(time(0));
     return cv::Point(rand() % width, rand() % height);
 }
 
-bool SnakeGateDetector::isTargetColor(cv::Point& P, cv::Mat frame) {
-    cv::Vec3b pixel = frame.at<cv::Vec3b>(P);
+bool SnakeGateDetector::isTargetColor(cv::Point& P) {
+    cv::Vec3b pixel = frame_.at<cv::Vec3b>(P);
 
     bool lower_bound = hsv_threshold_lower_.val[0] <= pixel.val[0] && hsv_threshold_lower_.val[1] <= pixel.val[1] && hsv_threshold_lower_.val[2] <= pixel.val[2];
     bool upper_bound = hsv_threshold_upper_.val[0] >= pixel.val[0] && hsv_threshold_upper_.val[1] >= pixel.val[1] && hsv_threshold_upper_.val[2] >= pixel.val[2];

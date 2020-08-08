@@ -9,7 +9,7 @@ class SnakeGateDetector {
   public:
     void setLengthThreshold(int length_threshold);
     void setColorFitnessThreshold(int color_fitness);
-    // void setImageFrame(cv::Mat frame);
+    void setImageFrame(cv::Mat frame);
     void setHSVThreshold(cv::Vec3b& upper, cv::Vec3b& lower);
     void setMaxGates(int max_gates);
     std::vector<cv::Point[4]>* getDetectedGates(); 
@@ -18,7 +18,8 @@ class SnakeGateDetector {
     int length_threshold_;
     int color_fitness_threshold_;
     int max_gates_;
-
+    
+    cv::Mat frame_;
     cv::Vec3b hsv_threshold_upper_;
     cv::Vec3b hsv_threshold_lower_;
     
@@ -27,7 +28,7 @@ class SnakeGateDetector {
     void findGates();
 
     cv::Point randomPoint(int width, int height);
-    bool isTargetColor(cv::Point& P, cv::Mat frame);
+    bool isTargetColor(cv::Point& P);
     double norm(cv::Point& P1, cv::Point& P2);
     double colorFitness(cv::Point* detected_gate);
 
