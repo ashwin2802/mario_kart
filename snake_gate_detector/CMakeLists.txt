@@ -7,7 +7,15 @@ catkin_simple(ALL_DEPS_REQUIRED)
 add_definitions(-std=c++17)
 set(CMAKE_BUILD_TYPE Release)
 
-cs_add_library(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
+
+cs_add_library(${PROJECT_NAME}_lib
+    src/libsnake_gate_detector.cpp
+    src/snake_gate_detector.cpp
+)
+target_link_libraries(${PROJECT_NAME}_lib ${OpenCV_LIBS})
+
+cs_add_executable(${PROJECT_NAME}_node src/${PROJECT_NAME}_node.cpp)
+target_link_libraries(${PROJECT_NAME}_node ${PROJECT_NAME}_lib)
 
 cs_install()
 cs_export()

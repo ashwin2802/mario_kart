@@ -1,43 +1,30 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
-#include <cstdlib>
+#include <cv_bridge/cv_bridge.h>
+#include <image_transport/image_transport.h>
+#include <ros/ros.h>
+#include <sensor_msgs/Image.h>
+#include <snake_gate_detector/libsnake_gate_detector.hpp>
 
 namespace snake_gate_detector {
 
-class SnakeGateDetector {
+class SnakeGateDetectorNode {
   public:
-    void setLengthThreshold(int& length_threshold) const;
-    void setColorFitnessThreshold(int& color_fitness) const;
-    void setImageFrame(cv::Mat frame) const;
-    void setHSVThreshold(cv::Vec3b& upper, cv::Vec3b& lower);
+    void init(ros::NodeHandle& nh);
+    void run();
 
-    std::vector<cv::Point[4]>* getDetectedGates() const; 
-  
   private:
-    int length_threshold;
-    int color_fitness_threshold;
-    int max_gates;
+    void imageCallback(const sensor_msgs::ImageConstPtr& msg);
 
-    cv::Mat frame;
-    
-    cv::Vec3b hsv_threshold_upper;
-    cv::Vec3b hsv_threshold_lower;
-    
-    std::vector<cv::Point[4]> detected_gates_;
-    
-    void findGates();
+    cv::Mat img_;
 
-    cv::Point randomPoint(int& width, int& height);
-    bool isTargetColor(cv::Point& P);
-    double Norm(cv::Point& P1, cv::Point& P2);
-    double colorFitness(cv::Point* detected_gate);
+    ros::Subscriber img_sub_;
 
-    cv::Point* searchUpDown(cv::Point& P);
-    cv::Point searchLeftRight(cv::Point& P);
+    // ros::Publisher centre_pub_;
+    // ros::Publisher thresh_pub_;
+    // ros::Publisher contour_pub_;
 
-    cv::Point* findMinimalSquare(cv::Point& P1, cv::Point& P2, cv::Point& P3, cv::Point& P4);
-    cv::Point* refineCorner(cv::Point& S1, cv::Point& S2, cv::Point& S3, cv::Point& S4);    
-
+    SnakeGateDetector detect_;
 };
+
 }  // namespace snake_gate_detector
