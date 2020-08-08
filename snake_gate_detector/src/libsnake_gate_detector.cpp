@@ -29,7 +29,7 @@ void SnakeGateDetector::setImageFrame(cv::Mat frame) {
     }
 
     for (int i = detected_gates_.size() - 1; i >= 0; i--) {
-        delete [] detected_gates_.at(i);
+        delete[] detected_gates_.at(i);
         detected_gates_.pop_back();
     }
 
@@ -45,30 +45,23 @@ std::vector<cv::Point*>* SnakeGateDetector::getDetectedGates() {
     return &detected_gates_;
 }
 
-cv::Mat SnakeGateDetector::getFrameWithGates(){
+cv::Mat SnakeGateDetector::getFrameWithGates() {
     return frame_;
 }
 
 void SnakeGateDetector::findGates() {
     int num_gates = 0;
-    for (int i = 0; i < (frame_.size().height) * (frame_.size().height); i++) {
+    for (int i = 0; i < (frame_.size().width) * (frame_.size().height); i++) {
         cv::Point P0 = cv::Point(i % frame_.size().width, i / frame_.size().width);
 
-        if (isTestImage) {
-            cv::Mat save_img;
-            frame_.copyTo(save_img);
-
-            cv::circle(save_img, P0, 5, cv::Scalar(0, 0, 0), -1);
-            char abspath[PATH_MAX];
-            realpath("~/Desktop/SGD/", abspath);
-            cv::imwrite(std::string(abspath) + "/test" + std::to_string(i) + ".jpg", save_img);
-        }
-
         if (isTargetColor(P0)) {
+            std::cout << "Found First Point of Potential Gate: " << P0.x << " " << P0.y << std::endl;
+
             cv::Point P[4];
             searchUpDown(P0, P);
 
             if (norm(P[0], P[1]) > length_threshold_) {
+                gate_progress_image_.copyTo(gate_progress_image_copy_);
                 searchLeft(P[0], P + 2);
                 searchLeft(P[1], P + 3);
 
@@ -158,27 +151,21 @@ void SnakeGateDetector::searchUpDown(cv::Point& P0, cv::Point* P) {
             P[0].y--;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else if (isTargetColor(cv::Point(P[0].x - 1, P[0].y - 1))) {
             P[0].x--;
             P[0].y--;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);                
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else if (isTargetColor(cv::Point(P[0].x + 1, P[0].y - 1))) {
             P[0].x++;
             P[0].y--;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else {
             break;
@@ -190,32 +177,25 @@ void SnakeGateDetector::searchUpDown(cv::Point& P0, cv::Point* P) {
             P[1].y++;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[1], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else if (isTargetColor(cv::Point(P[1].x - 1, P[1].y + 1))) {
             P[1].x--;
             P[1].y++;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[1], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
-            }            
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
+            }
         } else if (isTargetColor(cv::Point(P[1].x + 1, P[1].y + 1))) {
             P[1].x++;
             P[1].y++;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[1], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
-            }            
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
+            }
         } else {
             break;
         }
-
     }
 }
 
@@ -229,28 +209,28 @@ void SnakeGateDetector::searchLeft(cv::Point& P0, cv::Point* P) {
             P[0].x--;
             if (isTestImage) {
                 cv::circle(gate_progress_image_copy_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" + std::to_string(++num_points) + ".jpg", gate_progress_image_copy_);
-            }  
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
+                                std::to_string(++num_points) + ".jpg",
+                    gate_progress_image_copy_);
+            }
         } else if (isTargetColor(cv::Point(P[0].x - 1, P[0].y - 1))) {
             P[0].y--;
             P[0].x--;
             if (isTestImage) {
                 cv::circle(gate_progress_image_copy_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" + std::to_string(++num_points) + ".jpg", gate_progress_image_copy_);
-            }  
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
+                                std::to_string(++num_points) + ".jpg",
+                    gate_progress_image_copy_);
+            }
         } else if (isTargetColor(cv::Point(P[0].x - 1, P[0].y + 1))) {
             P[0].y++;
             P[0].x--;
             if (isTestImage) {
                 cv::circle(gate_progress_image_copy_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" + std::to_string(++num_points) + ".jpg", gate_progress_image_copy_);
-            }  
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
+                                std::to_string(++num_points) + ".jpg",
+                    gate_progress_image_copy_);
+            }
         } else {
             break;
         }
@@ -266,28 +246,28 @@ void SnakeGateDetector::searchRight(cv::Point& P0, cv::Point* P) {
             P[0].x++;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
-            }  
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
+                                std::to_string(++num_points) + ".jpg",
+                    gate_progress_image_);
+            }
         } else if (isTargetColor(cv::Point(P[0].x + 1, P[0].y - 1))) {
             P[0].y--;
             P[0].x++;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
-            }  
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
+                                std::to_string(++num_points) + ".jpg",
+                    gate_progress_image_);
+            }
         } else if (isTargetColor(cv::Point(P[0].x + 1, P[0].y + 1))) {
             P[0].y++;
             P[0].x++;
             if (isTestImage) {
                 cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
-                char abspath[PATH_MAX];
-                realpath("~/Desktop/SGD/", abspath);
-                cv::imwrite(std::string(abspath) + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
-            }  
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
+                                std::to_string(++num_points) + ".jpg",
+                    gate_progress_image_);
+            }
         } else {
             break;
         }
