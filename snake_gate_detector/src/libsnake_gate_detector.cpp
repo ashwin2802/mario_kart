@@ -23,7 +23,7 @@ void SnakeGateDetector::setImageFrame(cv::Mat frame) {
     static bool if_first_frame = true;
     if (if_first_frame) {
         if_first_frame = false;
-        for (int i = 0; i < (frame_.size().height) * (frame_.size().height); i++) {
+        for (int i = 0; i < (frame.size().width) * (frame.size().height); i++) {
             random_sample_.push_back(i);
         }
     }
@@ -52,7 +52,8 @@ cv::Mat SnakeGateDetector::getFrameWithGates() {
 void SnakeGateDetector::findGates() {
     int num_gates = 0;
     for (int i = 0; i < (frame_.size().width) * (frame_.size().height); i++) {
-        cv::Point P0 = cv::Point(i % frame_.size().width, i / frame_.size().width);
+        std::cout << i << "th elem" << std::endl; 
+        cv::Point P0 = cv::Point(random_sample_.at(i) % frame_.size().width, random_sample_.at(i) / frame_.size().width);
 
         if (isTargetColor(P0)) {
             std::cout << "Found First Point of Potential Gate: " << P0.x << " " << P0.y << std::endl;
