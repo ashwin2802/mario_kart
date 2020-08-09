@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="mav_name" default="firefly" />
+
+    <include file="$(find simulator)/launch/default.launch">
+        <arg name="mav_name" value="$(arg mav_name)" />
+    </include>
+
+    <group ns="$(arg mav_name)">
+        <node pkg="snake_gate_detector" type="snake_gate_detector_node" name="snake_gate_detector_node"  output="screen">
+            <rosparam file="$(find snake_gate_detector)/config/param.yaml" />
+            <remap from="image_raw"    to="camera_front/image_raw" />
+        </node>
+    </group>
+
+</launch>

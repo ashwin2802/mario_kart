@@ -1,0 +1,8 @@
+h_min: 10       #hsv min
+s_min: 0         
+v_min: 0         
+h_max: 100       #hsv max
+s_max: 255        
+v_max: 255  
+max_gates: 1
+length_threshold: 40     

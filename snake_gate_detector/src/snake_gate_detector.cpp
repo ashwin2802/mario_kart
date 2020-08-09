@@ -7,7 +7,6 @@ void SnakeGateDetectorNode::init(ros::NodeHandle& nh) {
     int h_max, s_max, v_max;
     int max_gates;
     int length_threshold;
-    cv::Vec3b lower, upper;
 
     img_sub_ = nh.subscribe("image_raw", 1, &SnakeGateDetectorNode::imageCallback, this);
 
@@ -22,43 +21,25 @@ void SnakeGateDetectorNode::init(ros::NodeHandle& nh) {
     nh_private.getParam("max_gates", max_gates);
     nh_private.getParam("length_threshold", length_threshold);
 
-    lower.val[0] = h_min;
-    lower.val[1] = s_min;
-    lower.val[2] = v_min;
+    cv::Vec3b lower(h_min, s_min, v_min);
+    cv::Vec3b upper(h_max, s_max, v_max);
 
-    upper.val[0] = h_max;
-    upper.val[1] = s_max;
-    upper.val[2] = v_max;
-
-    detect_.setHSVThreshold(lower, upper);
+    detect_.setHSVThreshold(upper, lower);
     detect_.setMaxGates(max_gates);
     detect_.setLengthThreshold(length_threshold);
+    detect_.isTestImage = false;
     // centre_pub_ = nh_private.advertise<detector_msgs::Centre>("centre_coord", 10);
     // thresh_pub_ = nh_private.advertise<sensor_msgs::Image>("thresh_img", 10);
-    // contour_pub_ = nh_private.advertise<sensor_msgs::Image>("contours", 10);
+    result_pub_ = nh_private.advertise<sensor_msgs::Image>("result_image", 10);
 }
 
 void SnakeGateDetectorNode::run() {
     if (img_.empty()) { return; };
     detect_.setImageFrame(img_);
-    // detect_.thresholdImage(img_);
-    // detect_.findGoodContours();
-    // detect_.drawContours(img_);
-    // detect_.fitRect(img_);
+    cv::Mat frame = detect_.getFrameWithGates();
 
-    // std::pair<int, int> centre_pair = detect_.getCentre();
-    // double distance = detect_.getDistance();
-    // centre_coord_.x = centre_pair.first;
-    // centre_coord_.y = centre_pair.second;
-    // centre_coord_.d = (float) distance;
-    // centre_coord_.header.stamp = ros::Time::now();
-
-    // sensor_msgs::ImagePtr thresh_msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", detect_.getThresh()).toImageMsg();
-    // sensor_msgs::ImagePtr contour_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", img_).toImageMsg();
-
-    // thresh_pub_.publish(thresh_msg);
-    // contour_pub_.publish(contour_msg);
-    // centre_pub_.publish(centre_coord_);
+    sensor_msgs::ImagePtr result_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
+    result_pub_.publish(result_msg);
 }
 
 void SnakeGateDetectorNode::imageCallback(const sensor_msgs::ImageConstPtr& msg) {

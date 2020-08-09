@@ -20,7 +20,7 @@ class SnakeGateDetectorNode {
 
     ros::Subscriber img_sub_;
 
-    // ros::Publisher centre_pub_;
+    ros::Publisher result_pub_;
     // ros::Publisher thresh_pub_;
     // ros::Publisher contour_pub_;
 
