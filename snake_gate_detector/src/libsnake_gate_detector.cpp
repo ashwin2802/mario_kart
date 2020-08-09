@@ -51,18 +51,35 @@ cv::Mat SnakeGateDetector::getFrameWithGates() {
 
 void SnakeGateDetector::findGates() {
     int num_gates = 0;
+    isGateFound = false;
     for (int i = 0; i < (frame_.size().width) * (frame_.size().height); i++) {
         std::cout << i << "th elem" << std::endl; 
         cv::Point P0 = cv::Point(random_sample_.at(i) % frame_.size().width, random_sample_.at(i) / frame_.size().width);
+
+        if (isTestImage && !isGateFound) {
+            cv::Mat img;
+            frame_.copyTo(img);
+            cv::circle(img, P0, 10, cv::Scalar(0, 0, 0), -1);
+            cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/find" + std::to_string(i) + ".jpg", img);
+        }
 
         if (isTargetColor(P0)) {
             std::cout << "Found First Point of Potential Gate: " << P0.x << " " << P0.y << std::endl;
 
             cv::Point P[4];
+
+            if (isTestImage) {
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
+                cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD/point_found.jpg", gate_progress_image_);
+            }
+
             searchUpDown(P0, P);
 
             if (norm(P[0], P[1]) > length_threshold_) {
-                gate_progress_image_.copyTo(gate_progress_image_copy_);
+                if (isTestImage) {
+                    gate_progress_image_.copyTo(gate_progress_image_copy_);
+                }
+
                 searchLeft(P[0], P + 2);
                 searchLeft(P[1], P + 3);
 
@@ -78,7 +95,17 @@ void SnakeGateDetector::findGates() {
 
                     if (/*colorFitness(detected_gate) > color_fitness_threshold_*/ 1) {
                         detected_gates_.push_back(detected_gate);
+                        cv::line(frame_, detected_gate[0], detected_gate[1], cv::Scalar(0, 0, 128), 5);
+                        cv::line(frame_, detected_gate[0], detected_gate[2], cv::Scalar(0, 0, 128), 5);
+                        cv::line(frame_, detected_gate[1], detected_gate[3], cv::Scalar(0, 0, 128), 5);
+                        cv::line(frame_, detected_gate[2], detected_gate[3], cv::Scalar(0, 0, 128), 5);
+                        cv::circle (frame_, detected_gate[0], 15, cv::Scalar(47, 152, 89), 5);
+                        cv::circle (frame_, detected_gate[1], 15, cv::Scalar(47, 152, 89), 5);
+                        cv::circle (frame_, detected_gate[2], 15, cv::Scalar(47, 152, 89), 5);
+                        cv::circle (frame_, detected_gate[3], 15, cv::Scalar(47, 152, 89), 5);
+
                         num_gates++;
+                        isGateFound = true;
                         if (num_gates == max_gates_) {
                             break;
                         }
@@ -103,11 +130,14 @@ void SnakeGateDetector::findGates() {
 
                     if (/*colorFitness(detected_gate) > color_fitness_threshold_*/ 1) {
                         detected_gates_.push_back(detected_gate);
-                        cv::line(frame_, detected_gate[0], detected_gate[1], cv::Scalar(0, 0, 0), 3);
-                        cv::line(frame_, detected_gate[1], detected_gate[2], cv::Scalar(0, 0, 0), 3);
-                        cv::line(frame_, detected_gate[2], detected_gate[3], cv::Scalar(0, 0, 0), 3);
-                        cv::line(frame_, detected_gate[0], detected_gate[3], cv::Scalar(0, 0, 0), 3);
-                        num_gates++;
+                        cv::line(frame_, detected_gate[0], detected_gate[1], cv::Scalar(0, 0, 128), 5);
+                        cv::line(frame_, detected_gate[0], detected_gate[2], cv::Scalar(0, 0, 128), 5);
+                        cv::line(frame_, detected_gate[1], detected_gate[3], cv::Scalar(0, 0, 128), 5);
+                        cv::line(frame_, detected_gate[2], detected_gate[3], cv::Scalar(0, 0, 128), 5);
+                        cv::circle (frame_, detected_gate[0], 15, cv::Scalar(47, 152, 89), 5);
+                        cv::circle (frame_, detected_gate[1], 15, cv::Scalar(47, 152, 89), 5);
+                        cv::circle (frame_, detected_gate[2], 15, cv::Scalar(47, 152, 89), 5);
+                        cv::circle (frame_, detected_gate[3], 15, cv::Scalar(47, 152, 89), 5);                        num_gates++;
                         if (num_gates == max_gates_) {
                             break;
                         }
@@ -151,24 +181,29 @@ void SnakeGateDetector::searchUpDown(cv::Point& P0, cv::Point* P) {
         if (isTargetColor(cv::Point(P[0].x, P[0].y - 1))) {
             P[0].y--;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[0], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else if (isTargetColor(cv::Point(P[0].x - 1, P[0].y - 1))) {
             P[0].x--;
             P[0].y--;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[0], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else if (isTargetColor(cv::Point(P[0].x + 1, P[0].y - 1))) {
             P[0].x++;
             P[0].y--;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[0], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/up" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else {
+            cv::circle(gate_progress_image_, P[0], 15, cv::Scalar(47, 152, 89), 5);
+            cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD/topfound.jpg", gate_progress_image_);
             break;
         }
     }
@@ -177,24 +212,29 @@ void SnakeGateDetector::searchUpDown(cv::Point& P0, cv::Point* P) {
         if (isTargetColor(cv::Point(P[1].x, P[1].y + 1))) {
             P[1].y++;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[1], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[1], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else if (isTargetColor(cv::Point(P[1].x - 1, P[1].y + 1))) {
             P[1].x--;
             P[1].y++;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[1], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[1], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else if (isTargetColor(cv::Point(P[1].x + 1, P[1].y + 1))) {
             P[1].x++;
             P[1].y++;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[1], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[1], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/down" + std::to_string(++num_points) + ".jpg", gate_progress_image_);
             }
         } else {
+            cv::circle(gate_progress_image_, P[1], 15, cv::Scalar(47, 152, 89), 5);
+            cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD/bottomfound.jpg", gate_progress_image_);
             break;
         }
     }
@@ -209,7 +249,7 @@ void SnakeGateDetector::searchLeft(cv::Point& P0, cv::Point* P) {
         if (isTargetColor(cv::Point(P[0].x - 1, P[0].y))) {
             P[0].x--;
             if (isTestImage) {
-                cv::circle(gate_progress_image_copy_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_copy_, P[0], 7, cv::Scalar(32, 46, 9), -1);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
                                 std::to_string(++num_points) + ".jpg",
                     gate_progress_image_copy_);
@@ -218,7 +258,7 @@ void SnakeGateDetector::searchLeft(cv::Point& P0, cv::Point* P) {
             P[0].y--;
             P[0].x--;
             if (isTestImage) {
-                cv::circle(gate_progress_image_copy_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_copy_, P[0], 7, cv::Scalar(32, 46, 9), -1);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
                                 std::to_string(++num_points) + ".jpg",
                     gate_progress_image_copy_);
@@ -227,12 +267,14 @@ void SnakeGateDetector::searchLeft(cv::Point& P0, cv::Point* P) {
             P[0].y++;
             P[0].x--;
             if (isTestImage) {
-                cv::circle(gate_progress_image_copy_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_copy_, P[0], 7, cv::Scalar(32, 46, 9), -1);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
                                 std::to_string(++num_points) + ".jpg",
                     gate_progress_image_copy_);
             }
         } else {
+            cv::circle(gate_progress_image_copy_, P[0], 15, cv::Scalar(47, 152, 89), 5);
+            cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD/left_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_found.jpg", gate_progress_image_copy_);
             break;
         }
     }
@@ -246,7 +288,8 @@ void SnakeGateDetector::searchRight(cv::Point& P0, cv::Point* P) {
         if (isTargetColor(cv::Point(P[0].x + 1, P[0].y))) {
             P[0].x++;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[0], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
                                 std::to_string(++num_points) + ".jpg",
                     gate_progress_image_);
@@ -255,7 +298,8 @@ void SnakeGateDetector::searchRight(cv::Point& P0, cv::Point* P) {
             P[0].y--;
             P[0].x++;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[0], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
                                 std::to_string(++num_points) + ".jpg",
                     gate_progress_image_);
@@ -264,12 +308,15 @@ void SnakeGateDetector::searchRight(cv::Point& P0, cv::Point* P) {
             P[0].y++;
             P[0].x++;
             if (isTestImage) {
-                cv::circle(gate_progress_image_, P[0], 5, cv::Scalar(0, 0, 0), -1);
+                cv::circle(gate_progress_image_, P[0], 7, cv::Scalar(32, 46, 9), -1);
+                cv::circle (gate_progress_image_, P0, 15, cv::Scalar(47, 152, 89), 5);
                 cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD" + "/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_" +
                                 std::to_string(++num_points) + ".jpg",
                     gate_progress_image_);
             }
         } else {
+            cv::circle(gate_progress_image_, P[0],15, cv::Scalar(47, 152, 89), 5);
+            cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD/right_" + std::to_string(P0.x) + "_" + std::to_string(P0.y) + "_found.jpg", gate_progress_image_);
             break;
         }
     }

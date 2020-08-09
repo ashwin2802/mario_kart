@@ -20,6 +20,7 @@ class SnakeGateDetector {
     int length_threshold_;
     int color_fitness_threshold_;
     int max_gates_;
+    bool isGateFound;
     
     std::vector<int> random_sample_;
 

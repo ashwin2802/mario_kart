@@ -20,6 +20,7 @@ int main() {
 
     cv::namedWindow("Detected gates", cv::WINDOW_NORMAL);
 
+    cv::imwrite(std::string(std::getenv("HOME")) + "/Desktop/SGD/result.jpg", result);
     cv::imshow("Detected gates", result);
     while (cv::waitKey(0) != 113);
     return 0;
